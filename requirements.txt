@@ -1,0 +1,5 @@
+gunicorn==19.3.0
+falcon==0.3.0
+requests==2.3.0
+requests_oauthlib==0.5.0
+telepot==6.5
