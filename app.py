@@ -7,7 +7,10 @@ import telepot
 from os.path import join, dirname
 from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+try:
+    load_dotenv(dotenv_path)
+except:
+    print "no .env found"
 
 def handle(msg):
     pprint.pprint(msg)
