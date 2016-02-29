@@ -1,0 +1,19 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+install:
+  - travis_retry pip install -r requirements.txt
+
+script:
+  - python --version
+  - behave -f progress --junit --tags=~@xfail features/
+
+after_failure:
+  - echo "FAILURE DETAILS (from XML reports):"
+  - bin/behave.junit_filter.py --status=failed reports
