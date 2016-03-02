@@ -25,6 +25,8 @@ bot = telepot.Bot(TELEGRAM_API_TOKEN)
 
 if __name__ == '__main__':
 
+    print 'starting ' + __file__
+
     if BASE_URL == 'localhost':
         bot.notifyOnMessage({'normal': on_chat_message}, run_forever=True)
     else:
