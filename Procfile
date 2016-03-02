@@ -1,2 +1,2 @@
 web: python services/gateway_telegram.py
-web: python services/dispatcher.py
+worker: python services/dispatcher.py

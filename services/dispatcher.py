@@ -7,7 +7,7 @@ PORT = get_env_variable('DISPATCHER_PORT') or get_env_variable('PORT')
 
 app = Flask(__name__)
 
-@app.route('/' + LOCAL_API_TOKEN + '/inbox', methods=['POST'])
+@app.route('/' + LOCAL_API_TOKEN + '/dispatcher/inbox', methods=['POST'])
 def inbox_new():
     print 'inbox_new ' + request.data
     return 'OK'
