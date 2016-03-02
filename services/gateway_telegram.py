@@ -6,12 +6,7 @@ from telepot import Bot, glance
 
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
 BASE_URL = get_env_variable('BASE_URL')
-HOST = get_env_variable('HOST')
-if HOST is None:
-    HOST = '0.0.0.0'
-PORT = get_env_variable('GATEWAY_TELEGRAM_PORT')
-if PORT is None:
-    PORT = get_env_variable('PORT')
+PORT = get_env_variable('PORT')
 
 app = Flask(__name__)
 update_queue = Queue()
@@ -29,12 +24,11 @@ bot = Bot(TELEGRAM_API_TOKEN)
 
 if __name__ == '__main__':
 
-    print 'starting ' + __file__
+    print 'starting ' + __file__ + '...'
 
-    if HOST == 'localhost':
+    if not BASE_URL:
         bot.notifyOnMessage({'normal': on_chat_message}, run_forever=True)
     else:
         bot.notifyOnMessage({'normal': on_chat_message}, source=update_queue)
         bot.setWebhook(BASE_URL + '/' + TELEGRAM_API_TOKEN)
-
-    app.run(host=HOST, port=int(PORT), debug=True)
+        app.run(host='0.0.0.0', port=int(PORT), debug=True)
