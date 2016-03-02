@@ -1,1 +1,1 @@
-worker: python app.py
+worker: make launch
