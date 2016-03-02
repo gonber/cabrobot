@@ -11,7 +11,5 @@ def get_env_variable(name):
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
         value = os.environ.get(name)
-        if value is None:
-            raise Exception('Environment variable ' + name + ' is not set')
 
     return value

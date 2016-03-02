@@ -1,16 +1,17 @@
 from utils import get_env_variable
 from flask import Flask, request
 from Queue import Queue
-import telepot
-import os
-import sys
+from telepot import Bot
+
 
 app = Flask(__name__)
 update_queue = Queue()
 
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
 BASE_URL = get_env_variable('BASE_URL')
-PORT = int(sys.argv[1])
+PORT = get_env_variable('GATEWAY_TELEGRAM_PORT')
+if PORT is None:
+    PORT = get_env_variable('PORT')
 
 @app.route('/' + TELEGRAM_API_TOKEN, methods=['GET', 'POST'])
 def pass_update():
@@ -21,7 +22,7 @@ def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
     print 'Normal Message:', content_type, chat_type, chat_id
 
-bot = telepot.Bot(TELEGRAM_API_TOKEN)
+bot = Bot(TELEGRAM_API_TOKEN)
 
 if __name__ == '__main__':
 
