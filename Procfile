@@ -1,1 +1,1 @@
-worker: python services/gateway_telegram.py 5050 &
+web: python services/gateway_telegram.py 5050
