@@ -37,4 +37,4 @@ if __name__ == '__main__':
         bot.notifyOnMessage({'normal': on_chat_message}, source=update_queue)
         bot.setWebhook(BASE_URL + '/' + TELEGRAM_API_TOKEN)
 
-    app.run(host=HOST, port=PORT, debug=True)
+    app.run(host=HOST, port=int(PORT), debug=True)
