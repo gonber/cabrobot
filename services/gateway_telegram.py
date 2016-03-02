@@ -5,6 +5,7 @@ from telepot import Bot, glance
 
 
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
+BASE_URL = get_env_variable('BASE_URL')
 HOST = get_env_variable('HOST')
 if HOST is None:
     HOST = '0.0.0.0'
@@ -34,6 +35,6 @@ if __name__ == '__main__':
         bot.notifyOnMessage({'normal': on_chat_message}, run_forever=True)
     else:
         bot.notifyOnMessage({'normal': on_chat_message}, source=update_queue)
-        bot.setWebhook(HOST + '/' + TELEGRAM_API_TOKEN)
+        bot.setWebhook(BASE_URL + '/' + TELEGRAM_API_TOKEN)
 
     app.run(host=HOST, port=PORT, debug=True)
