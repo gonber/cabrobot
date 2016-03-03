@@ -3,7 +3,7 @@ VIRTUALENV = $(shell which virtualenv)
 venv:
 	$(VIRTUALENV) venv
 
-launch: venv shutdown
+launch: shutdown
 	. venv/bin/activate; python services/gateway_telegram.py &
 	. venv/bin/activate; python services/dispatcher.py &
 
