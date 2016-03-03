@@ -10,6 +10,7 @@ launch: venv shutdown
 launch_heroku:
 	python services/gateway_telegram.py &
 	python services/dispatcher.py &
+	tail -f /dev/null # trick to run forever
 
 shutdown:
 	ps -ef | grep "services/gateway_telegram.py" | grep -v grep | awk '{print $$2}' | xargs kill
