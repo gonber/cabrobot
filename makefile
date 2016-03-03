@@ -8,8 +8,8 @@ launch: venv shutdown
 	. venv/bin/activate; python services/dispatcher.py &
 
 launch_heroku:
-	. python services/gateway_telegram.py &
-	. python services/dispatcher.py &
+	python services/gateway_telegram.py &
+	python services/dispatcher.py &
 
 shutdown:
 	ps -ef | grep "services/gateway_telegram.py" | grep -v grep | awk '{print $$2}' | xargs kill
