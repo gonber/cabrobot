@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/dispatcher/inbox', methods=['POST'])
 def inbox_new():
-    print 'inbox_new ' + request.data
+    print request.form
     return 'OK'
 
 if __name__ == '__main__':

@@ -2,11 +2,15 @@ from utils import get_env_variable
 from flask import Flask, request
 from Queue import Queue
 from telepot import Bot, glance
+import requests
 
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
 BASE_URL = get_env_variable('BASE_URL')
 HOST = get_env_variable('HOST')
 PORT = get_env_variable('PORT')
+
+DISPATCHER_URL = 'http://' + HOST + ':' + get_env_variable('DISPATCHER_PORT') \
+                    + '/dispatcher'
 
 app = Flask(__name__)
 update_queue = Queue()
@@ -17,8 +21,9 @@ def pass_update():
     return 'OK'
 
 def on_chat_message(msg):
-    content_type, chat_type, chat_id = glance(msg)
-    print 'Normal Message:', content_type, chat_type, chat_id
+    # content_type, chat_type, chat_id = glance(msg)
+    # print 'Normal Message:', content_type, chat_type, chat_id
+    reply = requests.post("{}/{}".format(DISPATCHER_URL, 'inbox'), data=msg)
 
 bot = Bot(TELEGRAM_API_TOKEN)
 
