@@ -1,9 +1,9 @@
 from utils import get_env_variable, get_service_url
 from flask import Flask, request
 from Queue import Queue
-from telepot import Bot, glance
 import requests
 import json
+from telepot import Bot, glance
 
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
 BASE_URL = get_env_variable('BASE_URL')
@@ -16,7 +16,7 @@ bot = Bot(TELEGRAM_API_TOKEN)
 def send_message_telegram(msg):
     keyboard = None
     if 'keyboard' in msg.keys():
-      keyboard = {'keyboard': [reply['keyboard']],
+      keyboard = {'keyboard': [msg['keyboard']],
                   'one_time_keyboard': True,
                   'resize_keyboard': True}
     bot.sendMessage(msg['chat_id'], msg['text'], reply_markup=keyboard)

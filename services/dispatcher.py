@@ -1,19 +1,61 @@
 from utils import get_env_variable
+from datetime import datetime
 from flask import Flask, request
 import json
 from gateway_telegram import send_message_telegram
+from users import Users
 
 PORT = get_env_variable('DISPATCHER_PORT')
 
+PERISHABLE_FIELDS = ['current_location', 'role', 'target_location']
+
 app = Flask(__name__)
+users = Users()
 
 @app.route('/dispatcher/inbox', methods=['POST'])
 def inbox_new():
     msg = json.loads(request.get_json())
+
+    user = users.get_user(msg['from']['id'])
+    user['chat_id'] = msg['chat']['id']
+    if (datetime.utcnow() - user['lastModified']).total_seconds() > 0.5*60:
+      for field in PERISHABLE_FIELDS:
+        user[field] = None
+
     reply = {}
-    reply['text'] = 'your text was ' + msg['text']
-    reply['chat_id'] = msg['chat']['id']
+    reply['chat_id'] = user['chat_id']
+    reply['text'] = 'your request cannot be serviced'
+    reply['keyboard'] = None
+
+    if user['current_location'] is None:
+      if 'location' in msg.keys():
+        user['current_location'] = msg['location']
+        reply['text'] = 'do you want to ride or drive?'
+        reply['keyboard'] = ['ride', 'drive']
+      else:
+        reply['text'] = 'please share your location'
+
+    elif user['role'] is None:
+      if 'text' in msg.keys():
+        if msg['text'] == 'ride':
+          user['role'] = 'rider'
+          reply['text'] = 'please share your destination'
+        elif msg['text'] == 'drive':
+          user['role'] = 'driver'
+          reply['text'] = 'you are now in the waiting list'
+
+    elif user['target_location'] is None and user['role'] == 'rider':
+      if 'location' in msg.keys():
+        user['target_location'] = msg['location']
+        reply['text'] = 'looking for a driver'
+      else:
+        reply['text'] = 'please share your destination'
+
+    users.update_user(user)
+    print users.get_user(msg['from']['id'])
+
     send_message_telegram(reply)
+
     return 'OK'
 
 if __name__ == '__main__':
