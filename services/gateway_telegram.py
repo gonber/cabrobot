@@ -3,16 +3,15 @@ from flask import Flask, request
 from Queue import Queue
 from telepot import Bot, glance
 
-LOCAL_API_TOKEN = get_env_variable('LOCAL_API_TOKEN')
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
 BASE_URL = get_env_variable('BASE_URL')
-HOST = get_env_variable('HOST') or '0.0.0.0'
+HOST = get_env_variable('HOST')
 PORT = get_env_variable('PORT')
 
 app = Flask(__name__)
 update_queue = Queue()
 
-@app.route('/' + LOCAL_API_TOKEN, methods=['GET', 'POST'])
+@app.route('/' + TELEGRAM_API_TOKEN, methods=['GET', 'POST'])
 def pass_update():
     update_queue.put(request.data)  # pass update to bot
     return 'OK'
@@ -32,4 +31,4 @@ if __name__ == '__main__':
     else:
         bot.notifyOnMessage({'normal': on_chat_message}, source=update_queue)
         bot.setWebhook(BASE_URL + '/' + TELEGRAM_API_TOKEN)
-        app.run(host=HOST, port=int(PORT), debug=True)
+        app.run(host='0.0.0.0', port=int(PORT), debug=True)
