@@ -27,7 +27,7 @@ def inbox_new():
     reply['text'] = 'your request cannot be serviced'
     reply['keyboard'] = None
 
-    if 'current_location' not in user.keys() or
+    if 'current_location' not in user.keys() or \
       user['current_location'] is None:
       if 'location' in msg.keys():
         user['current_location'] = msg['location']
@@ -36,7 +36,7 @@ def inbox_new():
       else:
         reply['text'] = 'please share your location'
 
-    elif 'role' not in user.keys() or
+    elif 'role' not in user.keys() or \
       user['role'] is None:
       if 'text' in msg.keys():
         if msg['text'] == 'ride':
@@ -46,7 +46,7 @@ def inbox_new():
           user['role'] = 'driver'
           reply['text'] = 'you are now in the waiting list'
 
-    elif ('target_location' not in user.keys() or
+    elif ('target_location' not in user.keys() or \
       user['target_location'] is None) and user['role'] == 'rider':
       if 'location' in msg.keys():
         user['target_location'] = msg['location']
