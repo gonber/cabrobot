@@ -6,10 +6,10 @@ import requests
 
 TELEGRAM_API_TOKEN = get_env_variable('TELEGRAM_API_TOKEN')
 BASE_URL = get_env_variable('BASE_URL')
-HOST = get_env_variable('HOST')
 PORT = get_env_variable('PORT')
+MODE = get_env_variable('MODE')
 
-DISPATCHER_URL = 'http://' + HOST + ':' + get_env_variable('DISPATCHER_PORT') \
+DISPATCHER_URL = 'http://localhost:' + get_env_variable('DISPATCHER_PORT') \
                     + '/dispatcher'
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     print 'starting ' + __file__ + '...'
 
-    if HOST == 'localhost':
+    if MODE == 'dev':
         bot.notifyOnMessage({'normal': on_chat_message}, run_forever=True)
     else:
         bot.notifyOnMessage({'normal': on_chat_message}, source=update_queue)
