@@ -1,1 +1,1 @@
-web: make launch
+web: make launch_heroku
