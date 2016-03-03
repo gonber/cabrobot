@@ -13,3 +13,7 @@ def get_env_variable(name):
         value = os.environ.get(name)
 
     return value
+
+def get_service_url(name):
+    return 'http://localhost:' + get_env_variable(name.upper() +'_PORT') \
+         + '/' + name
