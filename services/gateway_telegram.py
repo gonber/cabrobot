@@ -15,7 +15,7 @@ bot = Bot(TELEGRAM_API_TOKEN)
 # outbox
 def send_message_telegram(msg):
     keyboard = None
-    if 'keyboard' in msg.keys():
+    if 'keyboard' in msg.keys() and msg['keyboard']:
       keyboard = {'keyboard': [msg['keyboard']],
                   'one_time_keyboard': True,
                   'resize_keyboard': True}

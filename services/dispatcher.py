@@ -1,4 +1,4 @@
-from utils import get_env_variable
+from utils import get_env_variable, get_service_url
 from datetime import datetime
 from flask import Flask, request
 import json
@@ -11,6 +11,15 @@ PERISHABLE_FIELDS = ['current_location', 'role', 'target_location']
 
 app = Flask(__name__)
 users = Users()
+services = {}
+
+@app.route('/dispatcher/service', methods=['POST'])
+def register_service():
+    service = json.loads(request.get_json())
+    name = service.pop('name')
+    service['url'] = get_service_url(name)
+    services[name] = service
+    return 'NO_CONTENT', 204
 
 @app.route('/dispatcher/inbox', methods=['POST'])
 def inbox_new():
@@ -27,8 +36,7 @@ def inbox_new():
     reply['text'] = 'your request cannot be serviced'
     reply['keyboard'] = None
 
-    if 'current_location' not in user.keys() or \
-      user['current_location'] is None:
+    if user.get('current_location', None) is None:
       if 'location' in msg.keys():
         user['current_location'] = msg['location']
         reply['text'] = 'do you want to ride or drive?'

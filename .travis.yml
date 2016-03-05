@@ -13,9 +13,10 @@ install:
 
 script:
   - python --version
-  - behave -f progress --junit --tags=~@xfail features/
-  - python -m unittest discover tests/
+  - make unittest
+  # - behave -f progress --junit --tags=~@xfail features/
+  # - python -m unittest discover tests/
 
 after_failure:
-  - echo "FAILURE DETAILS (from XML reports):"
-  - bin/behave.junit_filter.py --status=failed reports
+  # - echo "FAILURE DETAILS (from XML reports):"
+  # - bin/behave.junit_filter.py --status=failed reports
