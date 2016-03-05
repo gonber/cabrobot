@@ -9,9 +9,8 @@ class Users():
     self._client = pymongo.MongoClient(url)
     self._db = self._client.get_default_database()
     self._collection = self._db['users']
-    self._collection.update_one({'_id': -1},
-      {'$set': {'_id': -1, 'lastModified': datetime.utcnow()}},
-      upsert=True) # bootstrap if needed
+    self._collection.update_one({'_id': -1}, # bootstrap if needed
+      {'$set': {'lastModified': datetime.utcnow()}},upsert=True)
 
   def get_user(self, user_id):
     self._collection.update_one({'_id': user_id},
