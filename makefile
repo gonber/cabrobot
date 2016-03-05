@@ -2,13 +2,14 @@ VIRTUALENV = $(shell which virtualenv)
 
 venv:
 	$(VIRTUALENV) venv
+	. venv/bin/activate
 
-launch: venv shutdown
+launch: shutdown
 	sleep 2 # let services shutdown properly
-	. venv/bin/activate; python services/gateway_telegram.py &
-	. venv/bin/activate; python services/dispatcher.py &
+	python services/gateway_telegram.py &
+	python services/dispatcher.py &
 	sleep 2 # let services start properly
-	. venv/bin/activate; python services/locator.py &
+	python services/locator.py &
 
 launch_heroku:
 	python services/gateway_telegram.py &
