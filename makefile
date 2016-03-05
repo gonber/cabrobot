@@ -18,9 +18,9 @@ launch_heroku:
 	tail -f /dev/null # trick to run forever
 
 shutdown:
-	ps -ef | grep "services/gateway_telegram.py" | grep -v grep | awk '{print $$2}' | xargs kill
-	ps -ef | grep "services/dispatcher.py" | grep -v grep | awk '{print $$2}' | xargs kill
-	ps -ef | grep "services/locator.py" | grep -v grep | awk '{print $$2}' | xargs kill
+	pkill python services/gateway_telegram.py || true
+	pkill python services/dispatcher.py || true
+	pkill python services/locator.py || true
 
 unittest: launch
 	sleep 2 # let services start properly
