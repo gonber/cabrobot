@@ -12,6 +12,7 @@ launch: shutdown
 	python services/locator.py &
 	python services/role.py &
 	python services/driver.py &
+	python services/rider.py &
 
 launch_heroku:
 	python services/gateway_telegram.py &
@@ -19,6 +20,7 @@ launch_heroku:
 	python services/locator.py &
 	python services/role.py &
 	python services/driver.py &
+	python services/rider.py &
 	tail -f /dev/null # trick to run forever
 
 shutdown:
@@ -27,6 +29,7 @@ shutdown:
 	pkill python services/locator.py || true
 	pkill python services/role.py || true
 	pkill python services/driver.py || true
+	pkill python services/rider.py || true
 
 unittest: launch
 	sleep 2 # let services start properly
