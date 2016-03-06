@@ -10,17 +10,20 @@ launch: shutdown
 	python services/dispatcher.py &
 	sleep 2 # let services start properly
 	python services/locator.py &
+	python services/role.py &
 
 launch_heroku:
 	python services/gateway_telegram.py &
 	python services/dispatcher.py &
 	python services/locator.py &
+	python services/role.py &
 	tail -f /dev/null # trick to run forever
 
 shutdown:
 	pkill python services/gateway_telegram.py || true
 	pkill python services/dispatcher.py || true
 	pkill python services/locator.py || true
+	pkill python services/role.py || true
 
 unittest: launch
 	sleep 2 # let services start properly

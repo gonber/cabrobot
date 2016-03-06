@@ -9,7 +9,7 @@ service = {
     'name': 'locator',
     'output_fields': ['current_location', 'target_location'],
     'input_fields': [[], ['role']],
-    'constraints': {'role': 'rider'}
+    'constraints': [{}, {'role': 'rider'}]
 }
 
 app = Flask(__name__)
