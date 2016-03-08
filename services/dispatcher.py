@@ -1,13 +1,31 @@
 from utils import get_env_variable, get_service_url
 from datetime import datetime
 from flask import Flask, request
+import requests
 import json
 from gateway_telegram import send_message_telegram
 from users import Users
 
+# rider_example = {
+#   'lastModified': 'yesterday',
+#   'current_location': 'here',
+#   'role': 'rider',
+#   'target_location': 'there',
+#   'assigned_driver': 'notYet',
+#   'proposed_driver': 'bob',
+#   'valid': 'true',
+#   'rejected_drivers': ['charles'],
+#
+#   'available': False,
+#   'assigned_rider': 'notYey',
+#   'proposed_rider': 'alice',
+#   'rejected_riders': ['diane']
+# }
+
 PORT = get_env_variable('DISPATCHER_PORT')
 
-PERISHABLE_FIELDS = ['current_location', 'role', 'target_location']
+PERISHABLE_FIELDS = ['current_location', 'role', 'target_location',
+                     'available', 'proposed_driver']
 
 app = Flask(__name__)
 users = Users()
@@ -15,7 +33,7 @@ services = {}
 
 @app.route('/dispatcher/service', methods=['POST'])
 def register_service():
-    service = json.loads(request.get_json())
+    service = json.loads(request.data)
     name = service.pop('name')
     service['url'] = get_service_url(name)
     services[name] = service
@@ -23,49 +41,46 @@ def register_service():
 
 @app.route('/dispatcher/inbox', methods=['POST'])
 def inbox_new():
-    msg = json.loads(request.get_json())
+    msg = json.loads(request.data)
 
     user = users.get_user(msg['from']['id'])
     user['chat_id'] = msg['chat']['id']
     if (datetime.utcnow() - user['lastModified']).total_seconds() > 0.5*60:
       for field in PERISHABLE_FIELDS:
         user[field] = None
+    user.pop('lastModified')
 
     reply = {}
     reply['chat_id'] = user['chat_id']
     reply['text'] = 'your request cannot be serviced'
     reply['keyboard'] = None
 
-    if user.get('current_location', None) is None:
-      if 'location' in msg.keys():
-        user['current_location'] = msg['location']
-        reply['text'] = 'do you want to ride or drive?'
-        reply['keyboard'] = ['ride', 'drive']
-      else:
-        reply['text'] = 'please share your location'
-
-    elif 'role' not in user.keys() or \
-      user['role'] is None:
-      if 'text' in msg.keys():
-        if msg['text'] == 'ride':
-          user['role'] = 'rider'
-          reply['text'] = 'please share your destination'
-        elif msg['text'] == 'drive':
-          user['role'] = 'driver'
-          reply['text'] = 'you are now in the waiting list'
-
-    elif ('target_location' not in user.keys() or \
-      user['target_location'] is None) and user['role'] == 'rider':
-      if 'location' in msg.keys():
-        user['target_location'] = msg['location']
-        reply['text'] = 'looking for a driver'
-      else:
-        reply['text'] = 'please share your destination'
-
-    users.update_user(user)
-    print users.get_user(msg['from']['id'])
-
-    send_message_telegram(reply)
+    for _, service in services.iteritems():
+        input_fields = service['input_fields']
+        for i in range(len(input_fields)):
+            output = service['output_fields'][i]
+            fulfils = (user[output] is None)
+            if fulfils:
+                input_fields_per_output = input_fields[i]
+                for field in input_fields_per_output:
+                    if service['constraints'][i].get(field, None):
+                        fulfils &= (user[field] ==
+                          service['constraints'][i][field])
+                    else:
+                        fulfils &= (user[field] is not None)
+            if fulfils:
+                content = {'user': user,
+                           'msg': msg
+                }
+                r = requests.post(service['url'], json=json.dumps(content))
+                if r.status_code != 400:
+                    reply = json.loads(r.json())
+                    update_user = reply.pop('user')
+                    update_user['_id'] = user['_id']
+                    users.update_user(update_user)
+                    if reply.get('text', '') != '':
+                        send_message_telegram(reply)
+                    return 'OK'
 
     return 'OK'
 

@@ -8,7 +8,7 @@ PORT = get_env_variable('LOCATOR_PORT')
 service = {
     'name': 'locator',
     'output_fields': ['current_location', 'target_location'],
-    'input_fields': [[], ['role']],
+    'input_fields': [[], ['current_location', 'role']],
     'constraints': [{}, {'role': 'rider'}]
 }
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     r = requests.post(
       "{}/{}".format(get_service_url('dispatcher'), 'service'),
-      json=json.dumps(service))
+      data=json.dumps(service))
     if r.status_code != 204:
         print __file__ + ': service was not properly registered and is' \
           + ' not callable'

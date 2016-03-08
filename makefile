@@ -8,7 +8,7 @@ launch: shutdown
 	sleep 2 # let services shutdown properly
 	python services/gateway_telegram.py &
 	python services/dispatcher.py &
-	sleep 2 # let services start properly
+	sleep 2 # let dispatcher start properly
 	python services/locator.py &
 	python services/role.py &
 	python services/driver.py &
@@ -17,6 +17,7 @@ launch: shutdown
 launch_heroku:
 	python services/gateway_telegram.py &
 	python services/dispatcher.py &
+	sleep 2 # let dispatcher start properly
 	python services/locator.py &
 	python services/role.py &
 	python services/driver.py &
@@ -33,4 +34,5 @@ shutdown:
 
 unittest: launch
 	sleep 2 # let services start properly
-	python -m unittest discover tests/
+	python -m unittest discover tests/ || true
+	make shutdown

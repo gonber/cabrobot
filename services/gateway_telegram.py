@@ -36,10 +36,9 @@ if __name__ == '__main__':
         return 'OK'
 
     def on_chat_message(msg):
-        msg = json.dumps(msg)
         reply = requests.post(
-          "{}/{}".format(get_service_url('dispatcher'), 'inbox'), json=msg)
-
+          "{}/{}".format(get_service_url('dispatcher'), 'inbox'),
+          data=json.dumps(msg))
 
     if MODE == 'dev':
         bot.notifyOnMessage({'normal': on_chat_message}, run_forever=True)

@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     r = requests.post(
       "{}/{}".format(get_service_url('dispatcher'), 'service'),
-      json=json.dumps(service))
+      data=json.dumps(service))
     if r.status_code != 204:
         print __file__ + ': service was not properly registered and is' \
           + ' not callable'
