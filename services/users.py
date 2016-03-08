@@ -21,6 +21,7 @@ class Users():
 
   def update_user(self, user):
     user.pop('lastModified', None)
-    self._collection.update_one({'_id': user['_id']},
+    user_id = user.pop('_id')
+    self._collection.update_one({'_id': user_id},
       {'$set': user,
        '$currentDate': {'lastModified': True}})
