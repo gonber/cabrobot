@@ -14,7 +14,7 @@ class Users():
 
   def get_user(self, user_id):
     self._collection.update_one({'_id': user_id},
-      {'$set': {'_id': user_id, 'lastModified': datetime.utcnow()}},
+      {'$set': {'lastModified': datetime.utcnow()}},
       upsert=True)
 
     return self._collection.find_one({'_id': user_id})

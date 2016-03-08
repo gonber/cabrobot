@@ -34,5 +34,4 @@ shutdown:
 
 unittest: launch
 	sleep 2 # let services start properly
-	python -m unittest discover tests/ || true
-	make shutdown
+	python -m unittest discover tests/
