@@ -28,7 +28,7 @@ def driver():
         user.get('current_location', None) is None:
         return 'BAD_REQUEST', 400
     else:
-        if msg is None:
+        if msg is {}:
             reply['user']['available'] = True
             reply['text'] = 'you are now in the waiting list'
 
