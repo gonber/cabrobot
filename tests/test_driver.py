@@ -14,7 +14,6 @@ class TestDriver(unittest.TestCase):
     def test_waiting_list(self):
         self.content['user']['current_location'] = [0., 1.]
         self.content['user']['role'] = 'driver'
-        self.content['msg'] = None
         r = requests.post(self.url, json=json.dumps(self.content))
         self.assertEqual(200, r.status_code)
 

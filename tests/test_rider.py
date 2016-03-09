@@ -15,7 +15,6 @@ class TestDriver(unittest.TestCase):
         self.content['user']['current_location'] = [0., 1.]
         self.content['user']['role'] = 'rider'
         self.content['user']['target_location'] = [1., 0.]
-        self.content['msg'] = None
         r = requests.post(self.url, json=json.dumps(self.content))
         self.assertEqual(200, r.status_code)
 
