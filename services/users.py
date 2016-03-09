@@ -20,7 +20,7 @@ class Users():
     return self._collection.find_one({'_id': user_id})
 
   def update_user(self, user):
-    user.pop('lastModified', None)
+    user['lastModified'] = datetime.utcnow()
     user_id = user.pop('_id')
     self._collection.update_one({'_id': user_id},
       {'$set': user})#, '$currentDate': {'lastModified': True}})

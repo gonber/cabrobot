@@ -17,6 +17,7 @@ class TestDispatcher(unittest.TestCase):
         msg = {'from': {'id': 0},
                'chat': {'id': 0}
         }
+        self.user.pop('lastModified', None)
         reply = {'user': self.user,
                  'text': 'a reply'
         }
