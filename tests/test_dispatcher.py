@@ -22,8 +22,7 @@ class TestDispatcher(unittest.TestCase):
                  'text': 'a reply'
         }
 
-        mock_request.post(utils.get_service_url(service['name']),
-            json=json.dumps(reply))
+        mock_request.post(utils.get_service_url(service['name']), json=reply)
         self.app.post('/dispatcher/inbox', data=json.dumps(msg))
 
     def setUp(self):
