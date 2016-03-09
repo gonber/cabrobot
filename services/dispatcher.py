@@ -45,10 +45,10 @@ def inbox_new():
 
     user = users.get_user(msg['from']['id'])
     user['chat_id'] = msg['chat']['id']
-    if (datetime.utcnow() - user['lastModified']).total_seconds() > 0.5*60:
+    if ((datetime.utcnow() - user['last_modified']).total_seconds()) > 30:
       for field in PERISHABLE_FIELDS:
         user[field] = None
-    user.pop('lastModified')
+    user.pop('last_modified')
 
     reply = {}
     reply['chat_id'] = user['chat_id']
