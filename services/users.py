@@ -1,6 +1,6 @@
 import pymongo
 import os
-from datetime import datetime, date
+from datetime import datetime
 
 
 class Users():
@@ -9,8 +9,9 @@ class Users():
         self._client = pymongo.MongoClient(url)
         self._db = self._client.get_default_database()
         self._collection = self._db['users']
-        self._collection.update_one({'_id': -1}, # bootstrap if needed
-          {'$set': {'lastModified': datetime.utcnow()}}, upsert=True)
+
+    def drop(self):
+        self._db.drop_collection('users')
 
     def get_user(self, user_id):
         user = self._collection.find_one({'_id': user_id})
@@ -18,13 +19,12 @@ class Users():
             return user
 
         self._collection.update_one({'_id': user_id},
-            {'$set': {'lastModified': datetime(1989, 8, 24)}},
+            {'$set': {'last_modified': datetime(1989, 8, 24)}},
             upsert=True)
 
         return self._collection.find_one({'_id': user_id})
 
     def update_user(self, user):
-        user['lastModified'] = datetime.utcnow()
+        user['last_modified'] = datetime.utcnow()
         user_id = user.pop('_id')
-        self._collection.update_one({'_id': user_id},
-          {'$set': user})#, '$currentDate': {'lastModified': True}})
+        self._collection.update_one({'_id': user_id}, {'$set': user})
