@@ -28,6 +28,7 @@ class TestDispatcher(unittest.TestCase):
     def setUp(self):
         dispatcher.send_message_telegram = mock.MagicMock()
 
+        dispatcher.app.testing = True
         self.app = dispatcher.app.test_client()
         self.user = dispatcher.users.get_user(0)
         for field in dispatcher.PERISHABLE_FIELDS:
@@ -101,10 +102,40 @@ class TestDispatcher(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_driver_dispatch_negative(self, m):
+        self.user['current_location'] = 'here'
+        self.user['role'] = 'other'
         self.dispatcher_calls_service(driver.service, m)
 
         self.assertEqual(0, m.call_count)
         self.assertFalse(dispatcher.send_message_telegram.called)
+
+
+    @requests_mock.Mocker()
+    def test_chained_dispatch(self, m):
+        r = self.app.post('/dispatcher/service',
+            data=json.dumps(locator.service))
+        self.assertEqual(204, r.status_code)
+        r = self.app.post('/dispatcher/service',
+            data=json.dumps(role.service))
+        self.assertEqual(204, r.status_code)
+
+        dispatcher.users.update_user(self.user)
+
+        msg = {'from': {'id': 0},
+               'chat': {'id': 0}
+        }
+        self.user['current_location'] = 'herechained'
+        self.user.pop('last_modified', None)
+        reply = {'user': self.user,
+                 'text': 'a reply'
+        }
+
+        m.post(utils.get_service_url(locator.service['name']), json=reply)
+        m.post(utils.get_service_url(role.service['name']), json=reply)
+        self.app.post('/dispatcher/inbox', data=json.dumps(msg))
+
+        self.assertEqual(2, m.call_count)
+        self.assertEqual(2, dispatcher.send_message_telegram.call_count)
 
 
 if __name__ == "__main__":

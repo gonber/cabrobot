@@ -56,10 +56,12 @@ def inbox_new():
     reply['keyboard'] = None
 
     progressing = True
+    called_services = []
     while progressing:
         progressing = False
-
-        for _, service in services.iteritems():
+        for service_name, service in services.iteritems():
+            if service_name in called_services:
+                continue
             input_fields = service['input_fields']
             for i in range(len(input_fields)):
                 output = service['output_fields'][i]
@@ -81,13 +83,15 @@ def inbox_new():
                         reply = r.json()
                         reply['chat_id'] = user['chat_id']
                         delta_user = reply.pop('user')
-                        delta_user['_id'] = user['_id']
-                        users.update_user(delta_user)
-                        user = users.get_user(user['_id'])
+                        for key in delta_user:
+                            user[key] = delta_user[key]
+                        msg = None # do not serve same msg twice
+                        progressing = True
+                        called_services.append(service_name)
                         if reply.get('text', '') != '':
                             send_message_telegram(reply)
-                        progressing = True
 
+    users.update_user(user)
     return 'NO_CONTENT', 204
 
 if __name__ == '__main__':

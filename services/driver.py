@@ -25,7 +25,7 @@ def driver():
     }
 
     if user.get('role', None) != 'driver' or \
-         user.get('current_location', None) is None:
+        user.get('current_location', None) is None:
         return 'BAD_REQUEST', 400
     else:
         if msg is None:
