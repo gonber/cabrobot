@@ -89,5 +89,5 @@ def inbox_new():
 if __name__ == '__main__':
 
     print 'starting ' + __file__ + '...'
-
+    users.drop() # REMOVE WHEN GOING LIVE!
     app.run(port=int(PORT), debug=True)
