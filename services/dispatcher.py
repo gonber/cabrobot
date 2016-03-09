@@ -55,35 +55,39 @@ def inbox_new():
     reply['text'] = 'your request cannot be serviced'
     reply['keyboard'] = None
 
-    for _, service in services.iteritems():
-        input_fields = service['input_fields']
-        for i in range(len(input_fields)):
-            output = service['output_fields'][i]
-            fulfils = (user.get(output, None) is None)
-            if fulfils:
-                input_fields_per_output = input_fields[i]
-                for field in input_fields_per_output:
-                    if service['constraints'][i].get(field, None):
-                        fulfils &= (user.get(field, None) ==
-                          service['constraints'][i][field])
-                    else:
-                        fulfils &= (user.get(field, None) is not None)
-            if fulfils:
-                content = {'user': user,
-                           'msg': msg
-                }
-                r = requests.post(service['url'], json=json.dumps(content))
-                if r.status_code != 400:
-                    reply = r.json()
-                    reply['chat_id'] = user['chat_id']
-                    update_user = reply.pop('user')
-                    update_user['_id'] = user['_id']
-                    users.update_user(update_user)
-                    if reply.get('text', '') != '':
-                        send_message_telegram(reply)
-                    return 'NO_CONTENT', 204
+    progressing = True
+    while progressing:
+        progressing = False
 
-    send_message_telegram(reply)
+        for _, service in services.iteritems():
+            input_fields = service['input_fields']
+            for i in range(len(input_fields)):
+                output = service['output_fields'][i]
+                fulfils = (user.get(output, None) is None)
+                if fulfils:
+                    input_fields_per_output = input_fields[i]
+                    for field in input_fields_per_output:
+                        if service['constraints'][i].get(field, None):
+                            fulfils &= (user.get(field, None) ==
+                              service['constraints'][i][field])
+                        else:
+                            fulfils &= (user.get(field, None) is not None)
+                if fulfils:
+                    content = {'user': user,
+                               'msg': msg
+                    }
+                    r = requests.post(service['url'], json=json.dumps(content))
+                    if r.status_code != 400:
+                        reply = r.json()
+                        reply['chat_id'] = user['chat_id']
+                        delta_user = reply.pop('user')
+                        delta_user['_id'] = user['_id']
+                        users.update_user(delta_user)
+                        user = users.get_user(user['_id'])
+                        if reply.get('text', '') != '':
+                            send_message_telegram(reply)
+                        progressing = True
+
     return 'NO_CONTENT', 204
 
 if __name__ == '__main__':

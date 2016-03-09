@@ -67,7 +67,7 @@ class TestDispatcher(unittest.TestCase):
         self.dispatcher_calls_service(locator.service, m)
 
         self.assertEqual(0, m.call_count)
-        self.assertTrue(dispatcher.send_message_telegram.called)
+        self.assertFalse(dispatcher.send_message_telegram.called)
 
     @requests_mock.Mocker()
     def test_role_dispatch(self, m):
@@ -104,7 +104,7 @@ class TestDispatcher(unittest.TestCase):
         self.dispatcher_calls_service(driver.service, m)
 
         self.assertEqual(0, m.call_count)
-        self.assertTrue(dispatcher.send_message_telegram.called)
+        self.assertFalse(dispatcher.send_message_telegram.called)
 
 
 if __name__ == "__main__":
