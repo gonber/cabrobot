@@ -75,6 +75,7 @@ def inbox_new():
                 r = requests.post(service['url'], json=json.dumps(content))
                 if r.status_code != 400:
                     reply = r.json()
+                    reply['chat_id'] = user['chat_id']
                     update_user = reply.pop('user')
                     update_user['_id'] = user['_id']
                     users.update_user(update_user)
