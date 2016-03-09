@@ -64,7 +64,7 @@ def inbox_new():
                 input_fields_per_output = input_fields[i]
                 for field in input_fields_per_output:
                     if service['constraints'][i].get(field, None):
-                        fulfils &= (user[field] ==
+                        fulfils &= (user.get(field, None) ==
                           service['constraints'][i][field])
                     else:
                         fulfils &= (user[field] is not None)
