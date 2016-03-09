@@ -67,7 +67,7 @@ def inbox_new():
                         fulfils &= (user.get(field, None) ==
                           service['constraints'][i][field])
                     else:
-                        fulfils &= (user[field] is not None)
+                        fulfils &= (user.get(field, None) is not None)
             if fulfils:
                 content = {'user': user,
                            'msg': msg
