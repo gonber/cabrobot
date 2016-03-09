@@ -85,7 +85,7 @@ def inbox_new():
                         delta_user = reply.pop('user')
                         for key in delta_user:
                             user[key] = delta_user[key]
-                        msg = None # do not serve same msg twice
+                        msg = {} # do not serve same msg twice
                         progressing = True
                         called_services.append(service_name)
                         if reply.get('text', '') != '':
