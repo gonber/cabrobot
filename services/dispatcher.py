@@ -46,8 +46,8 @@ def inbox_new():
     user = users.get_user(msg['from']['id'])
     user['chat_id'] = msg['chat']['id']
     if ((datetime.utcnow() - user['last_modified']).total_seconds()) > 30:
-      for field in PERISHABLE_FIELDS:
-        user[field] = None
+        for field in PERISHABLE_FIELDS:
+            user[field] = None
     user.pop('last_modified')
 
     reply = {}
@@ -59,7 +59,7 @@ def inbox_new():
         input_fields = service['input_fields']
         for i in range(len(input_fields)):
             output = service['output_fields'][i]
-            fulfils = (user[output] is None)
+            fulfils = (user.get(output, None) is None)
             if fulfils:
                 input_fields_per_output = input_fields[i]
                 for field in input_fields_per_output:
