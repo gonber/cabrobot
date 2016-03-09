@@ -29,7 +29,7 @@ def driver():
          user.get('target_location', None) is None:
         return 'BAD_REQUEST', 400
     else:
-        if msg is {}:
+        if msg == {}:
             reply['text'] = 'looking for a driver'
 
     return json.dumps(reply), 200
