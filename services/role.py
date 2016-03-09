@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/role', methods=['POST'])
 def role():
-    content = json.loads(request.get_json())
+    content = json.loads(request.json)
     user = content['user']
     msg = content['msg']
 

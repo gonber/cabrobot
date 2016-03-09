@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/rider', methods=['POST'])
 def driver():
-    content = json.loads(request.get_json())
+    content = json.loads(request.json)
     user = content['user']
     msg = content['msg']
 

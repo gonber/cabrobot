@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/locator', methods=['POST'])
 def locator():
-    content = json.loads(request.get_json())
+    content = json.loads(request.json)
     user = content['user']
     msg = content['msg']
 

@@ -74,15 +74,17 @@ def inbox_new():
                 }
                 r = requests.post(service['url'], json=json.dumps(content))
                 if r.status_code != 400:
+                    print 'dispatcher .... ' + r.json()
                     reply = json.loads(r.json())
                     update_user = reply.pop('user')
                     update_user['_id'] = user['_id']
                     users.update_user(update_user)
                     if reply.get('text', '') != '':
                         send_message_telegram(reply)
-                    return 'OK'
+                    return 'NO_CONTENT', 204
 
-    return 'OK'
+    send_message_telegram(reply)
+    return 'NO_CONTENT', 204
 
 if __name__ == '__main__':
 
