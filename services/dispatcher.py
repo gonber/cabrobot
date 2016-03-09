@@ -80,7 +80,7 @@ def inbox_new():
                     }
                     r = requests.post(service['url'], json=json.dumps(content))
                     if r.status_code != 400:
-                        reply = json.loads(r.text)
+                        reply = r.json()
                         reply['chat_id'] = user['chat_id']
                         delta_user = reply.pop('user')
                         for key in delta_user:
