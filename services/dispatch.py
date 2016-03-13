@@ -1,4 +1,4 @@
-import stage, users
+import stage
 from locateorigin import LocateOrigin
 from definerole import DefineRole
 from locatetarget import LocateTarget
@@ -6,16 +6,15 @@ from finddriver import FindDriver
 from datetime import datetime
 from tornado import gen, ioloop
 
-g_users = users.Users()
 
 class Dispatch(stage.Stage):
-    def __init__(self, sender):
-        super(Dispatch, self).__init__(sender, g_users)
+    def __init__(self, sender, users):
+        super(Dispatch, self).__init__(sender, users)
         self.next_stages.append(LocateOrigin)
 
     @gen.coroutine
     def run(self, msg):
-        user = self.users.get_user(msg['from']['id'])
+        user = yield self.users.get_user(msg['from']['id'])
         user['chat_id'] = msg['chat']['id']
         if user.get('stage') and \
            (user.get('expires') - datetime.utcnow()).total_seconds() > 0:

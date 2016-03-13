@@ -1,5 +1,5 @@
 import utils
-import dispatch
+import users, dispatch
 from tornado.platform.asyncio import to_asyncio_future, AsyncIOMainLoop
 import telepot.async
 import asyncio
@@ -24,10 +24,12 @@ if __name__ == '__main__':
     @asyncio.coroutine
     def handle(msg):
         yield from to_asyncio_future(
-            dispatch.Dispatch(send_message_telegram).run(msg)
+            dispatch.Dispatch(send_message_telegram, g_users).run(msg)
         )
 
     AsyncIOMainLoop().install()
+
+    g_users = users.Users()
 
     loop = asyncio.get_event_loop()
     loop.create_task(bot.messageLoop(handle))

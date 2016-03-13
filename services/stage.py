@@ -20,7 +20,7 @@ class Stage():
         user['stage'] = type(self).__name__
         user['expires'] = datetime.utcnow() + \
                           timedelta(0, expires_in_seconds)
-        self.users.update_user(user)
+        yield self.users.update_user(user)
 
     @gen.coroutine
     def propagate(self, user, msg={}):

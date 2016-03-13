@@ -15,7 +15,7 @@ class TestStageBase(AsyncTestCase):
         self.sender = mock.MagicMock(return_value=self.future)
 
         self.users = mock.Mock()
-        self.users.update_user = mock.MagicMock()
+        self.users.update_user = mock.MagicMock(return_value=self.future)
 
 
 class TestStage(TestStageBase):
