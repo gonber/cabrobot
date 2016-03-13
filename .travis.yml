@@ -1,7 +1,7 @@
 language: python
 sudo: false
 python:
-  - "2.7"
+  - "3.5.1"
 services: mongodb
 
 cache:
@@ -13,7 +13,7 @@ install:
 
 script:
   - python --version
-  - make unittest
+  - python -m tornado.test.runtests discover --verbose
   # - behave -f progress --junit --tags=~@xfail features/
   # - python -m unittest discover tests/
 

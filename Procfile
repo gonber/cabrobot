@@ -1,1 +1,1 @@
-web: make launch_heroku
+worker: python services/gateway_telegram.py

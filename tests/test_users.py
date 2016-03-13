@@ -1,5 +1,4 @@
 import unittest
-import mock
 from services import users
 from datetime import datetime
 
