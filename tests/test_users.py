@@ -1,15 +1,17 @@
-import unittest
 from services import users
+from tornado.testing import AsyncTestCase, gen_test, main
 from datetime import datetime
 
 
-class TestUsers(unittest.TestCase):
+class TestUsers(AsyncTestCase):
     def setUp(self):
+        super(TestUsers, self).setUp()
         self.users = users.Users()
         self.users.drop()
 
+    @gen_test
     def test_get_user_new(self):
-        user = self.users.get_user(200)
+        user = yield self.users.get_user(200)
 
         expected_user = {
             'last_modified': datetime(1989, 8, 24),
@@ -18,12 +20,13 @@ class TestUsers(unittest.TestCase):
 
         self.assertEqual(expected_user, user)
 
+    @gen_test
     def test_update_user(self):
-        user = self.users.get_user(200)
+        user = yield self.users.get_user(200)
         user['new_field'] = 1
-        self.users.update_user(user)
+        yield self.users.update_user(user)
 
-        user = self.users.get_user(200)
+        user = yield self.users.get_user(200)
 
         self.assertEqual(1, user['new_field'])
         self.assertTrue((datetime.utcnow() - user['last_modified'])
@@ -31,4 +34,4 @@ class TestUsers(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    main()

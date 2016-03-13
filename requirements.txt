@@ -1,5 +1,6 @@
 behave==1.2.5
-pymongo==3.2.1
+motor==0.6.2
+pymongo==2.8
 python-dotenv==0.3.0
 telepot==6.5
 tornado==4.3
