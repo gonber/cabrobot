@@ -5,7 +5,7 @@ from tornado import gen, ioloop
 class DriverQueue(stage.Stage):
     def __init__(self, sender, users):
         super(DriverQueue, self).__init__(sender, users)
-        self.timeout_in_seconds = 60
+        self.timeout_in_seconds = 120
 
     @gen.coroutine
     def availability_timeout(self, user):

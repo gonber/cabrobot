@@ -3,6 +3,7 @@ from locateorigin import LocateOrigin
 from definerole import DefineRole
 from locatetarget import LocateTarget
 from finddriver import FindDriver
+from driverqueue import DriverQueue
 from datetime import datetime
 from tornado import gen, ioloop
 
