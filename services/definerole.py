@@ -1,4 +1,4 @@
-import stage, locatetarget
+import stage, locatetarget, driverqueue
 from tornado import gen
 
 
@@ -6,6 +6,7 @@ class DefineRole(stage.Stage):
     def __init__(self, sender, users):
         super(DefineRole, self).__init__(sender, users)
         self.next_stages.append(locatetarget.LocateTarget)
+        self.next_stages.append(driverqueue.DriverQueue)
 
     @gen.coroutine
     def run(self, user, msg={}):

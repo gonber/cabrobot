@@ -26,4 +26,4 @@ class Stage():
     def propagate(self, user, msg={}):
         for next in self.next_stages:
             ioloop.IOLoop.current() \
-            .spawn_callback(next(self.sender, self.users).run, user, msg)
+            .add_callback(next(self.sender, self.users).run, user, msg)
