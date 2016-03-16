@@ -16,6 +16,7 @@ class Dispatch(stage.Stage):
     @gen.coroutine
     def run(self, msg):
         user = yield self.users.get_user(msg['from']['id'])
+        user['username'] = msg['from']['username']
         user['chat_id'] = msg['chat']['id']
         if user.get('stage') and \
            (user.get('expires') - datetime.utcnow()).total_seconds() > 0:
