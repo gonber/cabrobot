@@ -8,7 +8,6 @@ class FindDriver(stage.Stage):
 
     @gen.coroutine
     def run(self, user, msg={}):
-        yield gen.sleep(1)
         yield self.sender({
             'chat_id': user['chat_id'],
             'text': 'found driver 60 sec later'
