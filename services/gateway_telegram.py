@@ -16,7 +16,14 @@ def send_message_telegram(msg):
       keyboard = {'keyboard': [msg['keyboard']],
                   'one_time_keyboard': True,
                   'resize_keyboard': True}
-    yield bot.sendMessage(msg['chat_id'], msg['text'], reply_markup=keyboard)
+    if msg.get('text'):
+        yield bot.sendMessage(msg['chat_id'], msg['text'],
+            reply_markup=keyboard)
+    elif msg.get('location'):
+        yield bot.sendLocation(msg['chat_id'],
+            longitude=msg['location']['longitude'],
+            latitude=msg['location']['latitude']
+            reply_markup=keyboard)
 
 
 if __name__ == '__main__':
