@@ -22,7 +22,7 @@ def send_message_telegram(msg):
     elif msg.get('location'):
         yield bot.sendLocation(msg['chat_id'],
             longitude=msg['location']['longitude'],
-            latitude=msg['location']['latitude']
+            latitude=msg['location']['latitude'],
             reply_markup=keyboard)
 
 
