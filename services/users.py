@@ -34,7 +34,10 @@ class Users():
                 '$near': {
                     '$geometry': {
                         'type': "Point",
-                        'coordinates': coordinates
+                        'coordinates': [
+                            coordinates['longitude'],
+                            coordinates['latitude']
+                        ]
                     },
                     '$maxDistance': max_distance
                 }

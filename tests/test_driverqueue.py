@@ -66,7 +66,6 @@ class TestDriverQueue(test_stage.TestStageBase):
             'current_location': [0., 0.],
             'target_location': [0., 1.]
         }
-        msg = {'text': '666'}
         self.stage.enquire_timeout = 0.0001 # speedup test
 
         res = yield [
