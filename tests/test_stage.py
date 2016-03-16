@@ -46,7 +46,7 @@ class TestStage(TestStageBase):
 
         self.stage.next_stages.append(nextMock)
         yield self.stage.propagate({})
-        yield gen.sleep(0.001) # make sure spawn callback is finished
+        yield gen.moment # make sure callback is finished
         self.assertEqual(1, runMock.call_count)
 
 if __name__ == "__main__":
