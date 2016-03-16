@@ -21,6 +21,24 @@ class TestUsers(AsyncTestCase):
         self.assertEqual(expected_user, user)
 
     @gen_test
+    def test_get_drivers_within_distance(self):
+        user = yield self.users.get_user(200)
+        user['current_location'] = {'latitude': 0., 'longitude': 0.}
+        yield self.users.update_user(user)
+        user = yield self.users.get_user(201)
+        user['current_location'] = {'latitude': 0., 'longitude': 1e-5}
+        user['stage'] = 'DriverQueue'
+        yield self.users.update_user(user)
+        user = yield self.users.get_user(202)
+        user['current_location'] = {'latitude': 89., 'longitude': 0.}
+        user['stage'] = 'DriverQueue'
+        yield self.users.update_user(user)
+
+        drivers_within = yield self.users.get_drivers_within_distance(
+            {'latitude': 0, 'longitude': 0}, 10)
+        self.assertEqual(1, len(drivers_within))
+
+    @gen_test
     def test_update_user(self):
         user = yield self.users.get_user(200)
         user['new_field'] = 1

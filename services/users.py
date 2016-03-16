@@ -1,5 +1,5 @@
 import motor
-from tornado import gen
+from tornado import gen, ioloop
 import os
 from datetime import datetime
 
@@ -25,6 +25,24 @@ class Users():
             upsert=True)
 
         return (yield self._collection.find_one({'_id': user_id}))
+
+    @gen.coroutine
+    def get_drivers_within_distance(self, coordinates, max_distance):
+        yield self._collection.create_index([('current_location', '2dsphere')])
+        drivers_within = self._collection.find({
+            'current_location': {
+                '$near': {
+                    '$geometry': {
+                        'type': "Point",
+                        'coordinates': coordinates
+                    },
+                    '$maxDistance': max_distance
+                }
+            },
+            'stage': 'DriverQueue'
+        })
+
+        return (yield drivers_within.to_list(length=None))
 
     @gen.coroutine
     def update_user(self, user):
