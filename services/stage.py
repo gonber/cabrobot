@@ -16,10 +16,11 @@ class Stage():
         })
 
     @gen.coroutine
-    def persist(self, user, expires_in_seconds):
+    def persist(self, user, expires_in_seconds=0):
         user['stage'] = type(self).__name__
-        user['expires'] = datetime.utcnow() + \
-                          timedelta(0, expires_in_seconds)
+        if expires_in_seconds:
+            user['expires'] = datetime.utcnow() + \
+                              timedelta(0, expires_in_seconds)
         yield self.users.update_user(user)
 
     @gen.coroutine

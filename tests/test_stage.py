@@ -33,9 +33,18 @@ class TestStage(TestStageBase):
         })
 
     @gen_test
-    def test_persist(self):
-        yield self.stage.persist({}, 0)
-        self.assertEqual(1, self.users.update_user.call_count)
+    def test_persist_with_expiration(self):
+        yield self.stage.persist({}, 1)
+        call_arg = self.users.update_user.call_args[0][0]
+        self.assertTrue(call_arg.get('expires'))
+        self.assertEqual('Stage', call_arg.get('stage'))
+
+    @gen_test
+    def test_persist_without_expiration(self):
+        yield self.stage.persist({})
+        call_arg = self.users.update_user.call_args[0][0]
+        self.assertEqual(None, call_arg.get('expires'))
+        self.assertEqual('Stage', call_arg.get('stage'))
 
     @gen_test
     def test_propagate(self):
