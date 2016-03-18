@@ -68,12 +68,8 @@ class TestDriverQueue(test_stage.TestStageBase):
         }
         self.stage.enquire_timeout = 0.0001 # speedup test
 
-        res = yield [
-            self.stage.enquire(user, rider)
-        ]
-
-        self.assertEqual(0, res[0][0])
-        self.assertEqual(None, res[0][1]['future'])
+        res = yield self.stage.enquire(user, rider)
+        self.assertEqual(None, res)
 
     @gen_test
     def test_still_available_yes(self):

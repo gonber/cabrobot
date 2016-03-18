@@ -54,7 +54,7 @@ class DriverQueue(stage.Stage):
             bid = yield user['future']
             return (bid, user)
         except:
-            return (0, user)
+            pass
         finally:
             user['future'] = None
             yield self.persist(user)
