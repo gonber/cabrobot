@@ -70,6 +70,7 @@ class TestDriverQueue(test_stage.TestStageBase):
                 'chat_id': 0
             })
         ])
+        self.assertEqual(5,self.stage.sender.call_count)        
 
     @gen_test
     def test_enquire_timeout(self):
