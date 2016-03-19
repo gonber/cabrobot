@@ -21,6 +21,18 @@ class TestDriverQueue(test_stage.TestStageBase):
         self.assertEqual(0, self.stage.sender.call_count)
 
     @gen_test
+    def test_dispatch(self):
+        user = {'chat_id': 0}
+        rider = {'username': 'noname'}
+
+        yield self.stage.dispatch(user, rider)
+        self.stage.sender.assert_called_with({
+            'chat_id': user['chat_id'],
+            'text': 'noname accepted your ride and is waiting for you.' + \
+                ' text her if needed'
+        })
+
+    @gen_test
     def test_enquire(self):
         user = {'chat_id': 0}
         rider = {

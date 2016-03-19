@@ -25,26 +25,34 @@ class DriverQueue(stage.Stage):
             self.availability_timeout, user)
 
     @gen.coroutine
+    def dispatch(self, user, rider):
+        yield self.sender({
+            'chat_id': user['chat_id'],
+            'text': rider['username'] + ' accepted your ride and is' + \
+                ' waiting for you. text her if needed'
+        })
+
+    @gen.coroutine
     def enquire(self, user, rider):
         yield self.sender({
-              'chat_id': user['chat_id'],
-              'text': 'request for a ride from:'
+            'chat_id': user['chat_id'],
+            'text': 'request for a ride from:'
         })
         yield self.sender({
-              'chat_id': user['chat_id'],
-              'location': rider['current_location']
+            'chat_id': user['chat_id'],
+            'location': rider['current_location']
         })
         yield self.sender({
-              'chat_id': user['chat_id'],
-              'text': 'to:'
+            'chat_id': user['chat_id'],
+            'text': 'to:'
         })
         yield self.sender({
-              'chat_id': user['chat_id'],
-              'location': rider['target_location']
+            'chat_id': user['chat_id'],
+            'location': rider['target_location']
         })
         yield self.sender({
-              'chat_id': user['chat_id'],
-              'text': 'how much do you charge for it? (example answer: 25)'
+            'chat_id': user['chat_id'],
+            'text': 'how much do you charge for it? (example answer: 25)'
         })
         user['future'] = gen.with_timeout(
             timedelta(seconds=self.enquire_timeout), Future())
@@ -79,7 +87,7 @@ class DriverQueue(stage.Stage):
             pass
         else:
             yield self.sender({
-                  'chat_id': user['chat_id'],
-                  'text': 'you are now available'
+                'chat_id': user['chat_id'],
+                'text': 'you are now available'
             })
             yield self.availability_renew(user)
