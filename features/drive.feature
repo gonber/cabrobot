@@ -1,16 +1,11 @@
-Feature: Arrange a drive
+Feature: Drive
 
   Scenario: Set location and availability to drive
     Given Bob shared current location
      When Bob offers to drive
      Then Bob is flagged as available
 
-   Scenario: Reset availability to drive
-     Given Bob is flagged as available
-      When Bob withdraws availability
-      Then Bob is flagged as unavailable
-
-  Scenario: Availability ping
+   Scenario: Availability ping
     Given Bob is flagged as available
      When Bob is inactive for a certain period
      Then Bob is asked to renew availability

@@ -1,4 +1,4 @@
-Feature: Arrange a ride
+Feature: Ride
 
   Scenario: Get a driver without target location
     Given Alice shared current location
