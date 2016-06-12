@@ -10,7 +10,7 @@ TELEGRAM_API_TOKEN = utils.get_env_variable('TELEGRAM_API_TOKEN')
 bot = telepot.async.Bot(TELEGRAM_API_TOKEN)
 
 @asyncio.coroutine
-def send_message_telegram(msg):
+def telegram_send_message(msg):
     keyboard = None
     if msg.get('keyboard'):
       keyboard = {'keyboard': [msg['keyboard']],
@@ -31,12 +31,12 @@ if __name__ == '__main__':
     @asyncio.coroutine
     def handle(msg):
         yield from to_asyncio_future(
-            dispatch.Dispatch(send_message_telegram, g_users).run(msg)
+            dispatch.Dispatch(telegram_send_message, telegram_users).run(msg)
         )
 
     AsyncIOMainLoop().install()
 
-    g_users = users.Users()
+    telegram_users = users.Users()
 
     loop = asyncio.get_event_loop()
     loop.create_task(bot.messageLoop(handle))
