@@ -1,30 +1,17 @@
 Feature: Ride
 
-  Scenario: Get a driver without target location
-    Given Alice shared current location
-     When Alice asks for a ride
-     And Alice does not share target location
-     Then Alice gets Bob contact
+  Scenario: Alice wants a ride
+    Given users Alice
+    When Alice writes: lat 0.0 lon 0.0
+    Then Alice reads: do you want to ride or drive?
+    When Alice writes: ride
+    Then Alice reads: please share your target location
+    When Alice writes: lat 1.0 lon 1.0
+    Then Alice reads: looking for a driver
 
-  Scenario: Get a driver with target location
-    Given Diane shared current location
-     When Diane asks for a ride
-     And Diane shares target location
-     Then Diane gets the contact for the lowest bidding nearby driver
-
-   Scenario: No nearby driver
-     Given Alice shared current location
-      When Alice asks for a ride
-      And there are no nearby drivers
-      Then Alice ride is rejected
-
-  Scenario: Accept driver proposal
-    Given Alice received Bob's contact
-     When Alice accepts the proposal
-     Then Bob receives the go signal
-     And Alice is asked to wait for Bob
-
-  Scenario: Reject driver proposal
-     Given Alice received Bob contact
-      When Alice rejects the proposal
-      Then Alice gets the contact for the next available driver
+  Scenario: No nearby driver
+    Given users Alice
+    And Alice wants a ride
+    And there are no nearby drivers
+    When Alice waits for a response
+    Then Alice reads: no available drivers found

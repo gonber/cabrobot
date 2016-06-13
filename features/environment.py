@@ -47,6 +47,8 @@ class TestUser(AsyncTestCase):
     def reads(self, text):
         call_arg = self.send_message.call_args[0][0]
         self.assertTrue(self.user_id == call_arg.get('chat_id'))
+        if text != call_arg.get('text'):
+            print(call_arg.get('text')) 
         self.assertTrue(text == call_arg.get('text'))
         return self
 
@@ -61,7 +63,8 @@ def before_scenario(context, scenario):
     future = Future()
     future.set_result(True)
     context.send_message = mock.MagicMock(return_value=future)
+
     context.users = users.Users()
     context.users.drop()
 
-    context.bob = TestUser(context, 'bob', '101')
+    context.test_users = {}

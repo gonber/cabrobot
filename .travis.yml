@@ -14,9 +14,4 @@ install:
 script:
   - python --version
   - python -m tornado.test.runtests discover --verbose
-  # - behave -f progress --junit --tags=~@xfail features/
-  # - python -m unittest discover tests/
-
-after_failure:
-  # - echo "FAILURE DETAILS (from XML reports):"
-  # - bin/behave.junit_filter.py --status=failed reports
+  - behave
