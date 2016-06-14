@@ -22,4 +22,4 @@ class DefineRole(stage.Stage):
                 'text': 'do you want to ride or drive?',
                 'keyboard': ['ride', 'drive']
             })
-            yield self.persist(user, 30)
+            yield self.persist(user, self.user_interaction_timeout)

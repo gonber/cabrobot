@@ -17,4 +17,4 @@ class LocateOrigin(stage.Stage):
                 'chat_id': user['chat_id'],
                 'text': 'please share your current location'
             })
-            yield self.persist(user, 30)
+            yield self.persist(user, self.user_interaction_timeout)

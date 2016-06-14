@@ -7,6 +7,7 @@ class Stage():
         self.sender = sender
         self.users = users
         self.next_stages = []
+        self.user_interaction_timeout = 60
 
     @gen.coroutine
     def report_error(self, user):

@@ -47,7 +47,7 @@ class FindDriver(stage.Stage):
                     'keyboard': ['accept', 'reject']
                 })
                 user['proposed_driver'] = driver
-                yield self.persist(user, 30)
+                yield self.persist(user, self.user_interaction_timeout)
             else:
                 yield self.sender({
                     'chat_id': user['chat_id'],
