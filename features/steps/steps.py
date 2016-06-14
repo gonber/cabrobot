@@ -34,6 +34,15 @@ def step_impl(context, user):
                             .writes('drive') \
                             .reads('you are now available')
 
+@when(u'{user} bids: {ammount:d}')
+def step_impl(context, user, ammount):
+    context.test_users[user].reads('request for a ride from:') \
+                            .receives_location() \
+                            .reads('to:') \
+                            .receives_location() \
+                            .reads('how much do you charge for it? (example answer: 25)') \
+                            .writes(ammount)
+
 @given(u'{user} wants a ride')
 def step_impl(context, user):
     context.test_users[user].location(0., 0.) \

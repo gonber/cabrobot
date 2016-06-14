@@ -28,3 +28,29 @@ Feature: Ride
     Then Alice reads: Bob will take you there for 10
     When Alice writes: accept
     Then Bob reads: Alice accepted your ride and is waiting for you. text her if needed
+
+    Scenario: Alice rejects a driver
+      Given users Alice,Bob
+      And Bob is available to drive
+      And Alice wants a ride
+      Then Bob reads: request for a ride from:
+      And Bob receives location
+      And Bob reads: to:
+      And Bob receives location
+      And Bob reads: how much do you charge for it? (example answer: 25)
+      When Bob writes: 10
+      Then Alice reads: Bob will take you there for 10
+      When Alice writes: reject
+      Then nothing happens
+
+    @wip
+    Scenario: Alice gets offered the lowest bid
+      Given users Alice,Bob,Charlie
+      And Bob is available to drive
+      And Charlie is available to drive
+      And Alice wants a ride
+      When Bob bids: 10
+      And Charlie bids: 5
+      Then Alice reads: Charlie will take you there for 5
+      When Alice writes: accept
+      Then Charlie reads: Alice accepted your ride and is waiting for you. text her if needed
