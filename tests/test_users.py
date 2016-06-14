@@ -48,7 +48,24 @@ class TestUsers(AsyncTestCase):
 
         self.assertEqual(1, user['new_field'])
         self.assertTrue((datetime.utcnow() - user['last_modified'])
-            .total_seconds() < 10)
+            .total_seconds() < 30)
+
+    @gen_test
+    def test_drop(self):
+        user = yield self.users.get_user(200)
+        user['new_field'] = 1
+        yield self.users.update_user(user)
+
+        self.users.drop()
+
+        user = yield self.users.get_user(200)
+
+        expected_user = {
+            'last_modified': datetime(1989, 8, 24),
+             '_id': 200
+        }
+
+        self.assertEqual(expected_user, user)
 
 
 if __name__ == "__main__":
