@@ -15,7 +15,6 @@ Feature: Ride
     And there are no nearby drivers
     Then Alice reads: no available drivers found
 
-  @wip
   Scenario: Alice accepts a driver
     Given users Alice,Bob
     And Bob is available to drive
