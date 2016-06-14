@@ -73,14 +73,6 @@ class TestUser(AsyncTestCase):
                         self.assertTrue(False)
             yield moment
 
-    def clear_inbox(self):
-        for call in self.send_message.call_args_list:
-            msg = call[0][0]
-            if msg['chat_id'] == self.user_id:
-                self.send_message.call_args_list.remove(call)
-
-        return self
-
 
 def before_scenario(context, scenario):
     future = Future()
@@ -91,3 +83,6 @@ def before_scenario(context, scenario):
     context.users.drop()
 
     context.test_users = {}
+
+def after_scenario(context, scenario):
+    IOLoop.clear_instance()
