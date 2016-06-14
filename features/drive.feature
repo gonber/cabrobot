@@ -14,3 +14,11 @@ Feature: Drive
     Then Bob reads: are you still available to drive?
     When Bob writes: yes
     Then Bob reads: ok
+
+  Scenario: Timeout after availability ping
+    Given users Bob
+    And Bob is available to drive
+    When Bob is inactive
+    Then Bob reads: are you still available to drive?
+    When Bob writes: no
+    Then nothing happens

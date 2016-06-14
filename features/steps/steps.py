@@ -50,3 +50,7 @@ def step_impl(context, user):
 @given(u'there are no nearby drivers')
 def step_impl(context):
     pass
+
+@then(u'nothing happens')
+def step_impl(context):
+    pass
