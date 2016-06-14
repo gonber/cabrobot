@@ -47,7 +47,6 @@ class TestDriverQueue(test_stage.TestStageBase):
         ]
 
         self.assertEqual(666, res[0][0])
-        self.assertEqual(None, res[0][1]['future'])
         self.stage.sender.assert_has_calls([
             mock.call({
                 'text': 'request for a ride from:',
@@ -70,7 +69,7 @@ class TestDriverQueue(test_stage.TestStageBase):
                 'chat_id': 0
             })
         ])
-        self.assertEqual(5,self.stage.sender.call_count)        
+        self.assertEqual(5,self.stage.sender.call_count)
 
     @gen_test
     def test_enquire_timeout(self):
@@ -105,9 +104,10 @@ class TestDriverQueue(test_stage.TestStageBase):
 
     @gen_test
     def test_still_available_no(self):
+        user = {'chat_id': 0}
         msg = {'text': 'no'}
 
-        yield self.stage.run({}, msg)
+        yield self.stage.run(user, msg)
         self.assertEqual(0, self.stage.propagate.call_count)
         self.assertEqual(0, self.stage.sender.call_count)
 
