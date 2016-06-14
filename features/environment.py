@@ -46,7 +46,7 @@ class TestUser(AsyncTestCase):
     def _send(self):
         yield dispatch.Dispatch(self.send_message, self.users).run(self.msg)
 
-    @gen_test(timeout=20)
+    @gen_test(timeout=600)
     def reads(self, text):
         while True:
             for call in self.send_message.call_args_list:
@@ -60,7 +60,7 @@ class TestUser(AsyncTestCase):
                         self.assertTrue(False)
             yield moment
 
-    @gen_test(timeout=20)
+    @gen_test(timeout=600)
     def receives_location(self):
         while True:
             for call in self.send_message.call_args_list:
