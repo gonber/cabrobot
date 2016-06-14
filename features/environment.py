@@ -9,12 +9,14 @@ from unittest import mock
 
 
 class TestUser(AsyncTestCase):
-    def __init__(self, context, username, in_id):
+    def __init__(self, context, username, user_id):
         self.io_loop = IOLoop.current()
+
         self.send_message = context.send_message
         self.users = context.users
+
         self.username = username
-        self.user_id = in_id
+        self.user_id = user_id
         self.msg = {
             'from': {
                 'id': self.user_id,
@@ -44,20 +46,41 @@ class TestUser(AsyncTestCase):
     def _send(self):
         yield dispatch.Dispatch(self.send_message, self.users).run(self.msg)
 
+    @gen_test(timeout=20)
     def reads(self, text):
-        call_arg = self.send_message.call_args[0][0]
-        self.assertTrue(self.user_id == call_arg.get('chat_id'))
-        if text != call_arg.get('text'):
-            print(call_arg.get('text')) 
-        self.assertTrue(text == call_arg.get('text'))
+        while True:
+            for call in self.send_message.call_args_list:
+                msg = call[0][0]
+                if msg['chat_id'] == self.user_id:
+                    if msg.get('text') == text:
+                        self.send_message.call_args_list.remove(call)
+                        return self
+                    else:
+                        print(msg.get('text'))
+                        self.assertTrue(False)
+            yield moment
+
+    @gen_test(timeout=20)
+    def receives_location(self):
+        while True:
+            for call in self.send_message.call_args_list:
+                msg = call[0][0]
+                if msg['chat_id'] == self.user_id:
+                    if msg.get('location'):
+                        self.send_message.call_args_list.remove(call)
+                        return self
+                    else:
+                        self.assertTrue(False)
+            yield moment
+
+    def clear_inbox(self):
+        for call in self.send_message.call_args_list:
+            msg = call[0][0]
+            if msg['chat_id'] == self.user_id:
+                self.send_message.call_args_list.remove(call)
+
         return self
 
-    @gen_test(timeout=600)
-    def wait_new_message(self):
-        base = self.send_message.call_count
-        while self.send_message.call_count <= base:
-            yield moment
-        return self
 
 def before_scenario(context, scenario):
     future = Future()

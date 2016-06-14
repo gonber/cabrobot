@@ -5,6 +5,8 @@ from datetime import timedelta
 
 
 class DriverQueue(stage.Stage):
+    futures = {}
+
     def __init__(self, sender, users):
         super(DriverQueue, self).__init__(sender, users)
         self.renewal_period = 120
@@ -54,27 +56,25 @@ class DriverQueue(stage.Stage):
             'chat_id': user['chat_id'],
             'text': 'how much do you charge for it? (example answer: 25)'
         })
-        user['future'] = gen.with_timeout(
+        DriverQueue.futures[user['chat_id']] = gen.with_timeout(
             timedelta(seconds=self.enquire_timeout), Future())
-        yield self.persist(user)
 
         try:
-            bid = yield user['future']
+            bid = yield DriverQueue.futures[user['chat_id']]
             return (bid, user)
         except:
             pass
         finally:
-            user['future'] = None
-            yield self.persist(user)
+            DriverQueue.futures.pop(user['chat_id'])
 
     @gen.coroutine
     def run(self, user, msg={}):
         if user.get('role') == 'rider':
             return
-        if user.get('future'):
+        if DriverQueue.futures.get(user['chat_id']):
             try:
                 bid = int(msg.get('text'))
-                user['future'].set_result(bid)
+                DriverQueue.futures[user['chat_id']].set_result(bid)
             except:
                 pass
         elif msg.get('text') == 'yes':

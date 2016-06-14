@@ -23,24 +23,29 @@ def step_impl(context, user, text):
 def step_impl(context, user, text):
     context.test_users[user].reads(text)
 
+@then(u'{user} receives location')
+def step_impl(context, user):
+    context.test_users[user].receives_location()
+
 @given(u'{user} is available to drive')
 def step_impl(context, user):
     context.test_users[user].location(0., 0.) \
-                            .writes('drive')
+                            .reads('do you want to ride or drive?') \
+                            .writes('drive') \
+                            .reads('you are now available')
 
 @given(u'{user} wants a ride')
 def step_impl(context, user):
     context.test_users[user].location(0., 0.) \
+                            .reads('do you want to ride or drive?') \
                             .writes('ride') \
-                            .location(1., 1.)
+                            .reads('please share your target location') \
+                            .location(1., 1.) \
+                            .reads('looking for a driver')
 
 @when(u'{user} is inactive')
 def step_impl(context, user):
-    context.test_users[user].wait_new_message()
-
-@when(u'{user} waits for a response')
-def step_impl(context, user):
-    context.test_users[user].wait_new_message()
+    pass
 
 @given(u'there are no nearby drivers')
 def step_impl(context):

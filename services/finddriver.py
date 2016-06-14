@@ -30,7 +30,8 @@ class FindDriver(stage.Stage):
             drivers = yield self.users.get_drivers_within_distance(
                 user['current_location'], self.driver_search_radius)
 
-            responses = yield [self.dq.enquire(driver) for driver in drivers]
+            responses = yield [
+                          self.dq.enquire(driver, user) for driver in drivers]
             responses = [response for response in responses
                             if response is not None]
 
