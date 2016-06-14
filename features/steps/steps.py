@@ -29,7 +29,12 @@ def step_impl(context, user):
 
 @given(u'{user} is available to drive')
 def step_impl(context, user):
-    context.test_users[user].location(0., 0.) \
+    context.execute_steps('given ' + user + \
+      u' is available to drive at lat 0.0 lon 0.0')
+
+@given(u'{user} is available to drive at lat {lat:f} lon {lon:f}')
+def step_impl(context, user, lat, lon):
+    context.test_users[user].location(lat, lon) \
                             .reads('do you want to ride or drive?') \
                             .writes('drive') \
                             .reads('you are now available')
@@ -45,12 +50,18 @@ def step_impl(context, user, ammount):
 
 @given(u'{user} wants a ride')
 def step_impl(context, user):
-    context.test_users[user].location(0., 0.) \
+    context.execute_steps('given ' + user + \
+      u' wants a ride from lat 0.0 lon 0.0')
+
+@given(u'{user} wants a ride from lat {lat:f} lon {lon:f}')
+def step_impl(context, user, lat, lon):
+    context.test_users[user].location(lat, lon) \
                             .reads('do you want to ride or drive?') \
                             .writes('ride') \
                             .reads('please share your target location') \
                             .location(1., 1.) \
                             .reads('looking for a driver')
+
 
 @when(u'{user} is inactive')
 def step_impl(context, user):

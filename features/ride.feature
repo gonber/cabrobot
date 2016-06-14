@@ -43,7 +43,6 @@ Feature: Ride
       When Alice writes: reject
       Then nothing happens
 
-    @wip
     Scenario: Alice gets offered the lowest bid
       Given users Alice,Bob,Charlie
       And Bob is available to drive
@@ -54,3 +53,13 @@ Feature: Ride
       Then Alice reads: Charlie will take you there for 5
       When Alice writes: accept
       Then Charlie reads: Alice accepted your ride and is waiting for you. text her if needed
+
+    Scenario: Alice gets offered the nearby driver
+      Given users Alice,Bob,Charlie
+      And Bob is available to drive at lat 0.0 lon 0.0
+      And Charlie is available to drive at lat 45.0 lon 100.0
+      And Alice wants a ride from lat 0.0 lon 0.0
+      When Bob bids: 10
+      Then Alice reads: Bob will take you there for 10
+      When Alice writes: accept
+      Then Bob reads: Alice accepted your ride and is waiting for you. text her if needed

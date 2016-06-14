@@ -86,3 +86,6 @@ def before_scenario(context, scenario):
 
 def after_scenario(context, scenario):
     IOLoop.clear_instance()
+    del context.send_message
+    del context.users
+    del context.test_users
